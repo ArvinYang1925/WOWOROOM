@@ -5,6 +5,8 @@ const token = "av7hkORHfkhzaZuaz785ZHyKDct2";
 const productList = document.querySelector('.productWrap')
 const discardAllBtn = document.querySelector('.discardAllBtn') 
 const shoppingCartList = document.querySelector('.shoopingCartContent')
+const totalPrice = document.querySelector('.totalPrice')
+
 // 產品列表
 let products = []
 // 購物車列表
@@ -104,7 +106,7 @@ function categoryFilter(category) {
   productList.innerHTML = str
 }
 // 產品列表渲染
-function renderProductList() {
+function renderProductList() { 
   let str = ''
   products.forEach(function(item) {
     str += `
@@ -114,8 +116,8 @@ function renderProductList() {
             alt="">
         <a href="#" class="addCardBtn" data-id="${item.id}">加入購物車</a>
         <h3>${item.title}</h3>
-        <del class="originPrice">${item.origin_price}</del>
-        <p class="nowPrice">${item.price}</p>
+        <del class="originPrice">NT$${item.origin_price}</del>
+        <p class="nowPrice">NT$${item.price}</p>
       </li>
     `
   })
@@ -127,7 +129,6 @@ function getCartList() {
   axios.get(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`).
     then(function (response) {
       carts = response.data.carts
-      const totalPrice = document.querySelector('.totalPrice')
       totalPrice.textContent = response.data.finalTotal
       renderCartList()
     })
@@ -147,9 +148,9 @@ function renderCartList() {
               <p>${product.title}</p>
           </div>
       </td>
-      <td>${product.price}</td>
+      <td>NT$${product.price}</td>
       <td>${item.quantity}</td>
-      <td>${item.quantity*product.price}</td>
+      <td>NT$${item.quantity*product.price}</td>
       <td class="discardBtn">
           <a href="#" class="material-icons" data-id="${item.id}" data-qq="${product.title}">
               clear
@@ -166,7 +167,6 @@ function deleteAllCartList() {
   axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`).
     then(function (response) {
       alert('刪除購物車全部內容')
-      console.log(response.data);
       carts = response.data.carts
       renderCartList()
     })
@@ -181,9 +181,9 @@ function addCartItem(id,quantity) {
     }
   }).then(function (response) {
       alert('已加入購物車！')
-      console.log(response.data);
       carts = response.data.carts
       renderCartList()
+      totalPrice.textContent = response.data.finalTotal
   })
 }
 
@@ -192,9 +192,9 @@ function deleteCartItem(cartId,cartItemTitle) {
   axios.delete(`https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts/${cartId}`).
     then(function (response) {
       alert(`已刪除 ${cartItemTitle}`)
-      console.log(response.data)
       carts = response.data.carts
       renderCartList()
+      totalPrice.textContent = response.data.finalTotal
     })
 }
 
@@ -241,7 +241,6 @@ orderSubmitBtn.addEventListener("click",function(e){
       }
     }
   ).then(function (response) {
-      console.log(response.data);
       alert('已成功送出訂單')
       window.location.reload()
       // 重新設定表單
