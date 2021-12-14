@@ -97,8 +97,8 @@ function categoryFilter(category) {
               alt="">
           <a href="#" class="addCardBtn" data-id="${item.id}">加入購物車</a>
           <h3>${item.title}</h3>
-          <del class="originPrice">${item.origin_price}</del>
-          <p class="nowPrice">${item.price}</p>
+          <del class="originPrice">NT$${item.origin_price}</del>
+          <p class="nowPrice">NT$${item.price}</p>
         </li>
       `
     }
